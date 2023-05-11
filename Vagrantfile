@@ -1,3 +1,8 @@
+$script = <<-SCRIPT
+cd ConverterService
+docker-compose up
+SCRIPT
+
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -20,8 +25,28 @@ Vagrant.configure("2") do |config|
 
   #configureprovisionersonthamachine
   config.vm.provision :docker
+  config.vm.provision :docker_compose
+  # config.vm.provision :shell, path: "bootstrap.sh"
+  # config.vm.provision :file, source: "newfile", destination: "newfile"
+  config.vm.provision :file, source: "Converter", destination: "ConverterService"
+
   config.vm.define "server-1" do |dockerserver|
     dockerserver.vm.network "private_network" , ip: '192.168.33.60'
     dockerserver.vm.hostname = "dockerserver"
+  #  dockerserver.vm.provision "shell", inline: "echo Hi Class from Shell inline"
+  #  dockerserver.vm.provision "shell", inline: $script
+  #  dockerserver.vm.provision "shell" do |s|
+  #    s.inline = "echo $1"
+  #    s.args = ["AT", "Class!"]
+  #    end
+  #  dockerserver.vm.provision "docker" do |d|
+  #    d.run "hello-world"
+  #    end
+  end
+
+  config.vm.define "server-2" do |server2|
+    server2.vm.network "private_network" , ip: '192.168.33.61'
+    server2.vm.hostname = "server2"
+    server2.vm.provision "shell", inline: $script
   end
 end
