@@ -1,9 +1,7 @@
 $script = <<-SCRIPT
-echo "I like Vagrant"
-echo "I love Linux"
-date > ~/vagrant_provisioned_at
+cd ConverterService
+docker-compose up
 SCRIPT
-
 
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
@@ -25,8 +23,8 @@ Vagrant.configure("2") do |config|
     vb.memory = "1024"
   end
 
-  #configureprovisionersonthamachine
   config.vm.provision :docker
+  config.vm.provision :docker_compose
   config.vm.provision :shell, path: "bootstrap.sh"
   config.vm.provision :file, source: "newfile", destination: "newfile"
   config.vm.provision :file, source: "HTML", destination: "HTMLDIR"
@@ -43,5 +41,12 @@ Vagrant.configure("2") do |config|
     dockerserver.vm.provision "docker" do |d|
       d.run "hello-world"
       end
+  end
+
+  config.vm.define "server-2" do |server2|
+    server2.vm.network "private_network" , ip: '192.168.33.61'
+    server2.vm.hostname = "server2"
+    server2.vm.provision :file, source: "Converter", destination: "ConverterService"
+    server2.vm.provision "shell", inline: $script
   end
 end
