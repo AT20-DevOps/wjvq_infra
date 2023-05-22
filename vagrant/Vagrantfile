@@ -1,10 +1,4 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64"
   config.vm.box_download_insecure=true
@@ -22,5 +16,7 @@ Vagrant.configure("2") do |config|
     ci.vm.hostname = "ciserver"
     ci.vm.provision :file, source:"../docker/docker-compose.ci.yml", destination:"docker-compose.yml"
     ci.vm.provision :docker_compose, yml:"/home/vagrant/docker-compose.yml", run: "always"
+    ci.vm.provision "shell", inline: $script
+    ci.vm.provision :shell, inline:"sudo chmod 777 /var/run/docker.sock"
   end
 end
