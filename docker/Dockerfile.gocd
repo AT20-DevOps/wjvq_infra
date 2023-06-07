@@ -1,4 +1,6 @@
 FROM gocd/gocd-agent-ubuntu-20.04:v22.2.0
 USER root
 RUN apt-get update \
-    && curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get install nodejs
+    && curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get install nodejs && \ 
+    rm -rf /var/lib/apt/lists/* 
+USER go
