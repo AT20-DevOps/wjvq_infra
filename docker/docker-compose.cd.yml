@@ -12,7 +12,7 @@ services:
       - go_server:/home/go
 
   gocd_agent_ubuntu:
-    image: gocd/gocd-agent-ubuntu-20.04:v22.2.0
+    image: willvq/gocd-agent-ubuntu-20.04-node:v22.2.0
     container_name: gocd_agent_ubuntu
     restart: always
     depends_on:
